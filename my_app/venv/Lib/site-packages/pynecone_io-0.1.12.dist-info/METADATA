@@ -1,0 +1,274 @@
+Metadata-Version: 2.1
+Name: pynecone-io
+Version: 0.1.12
+Summary: The easiest way to build web apps.
+Home-page: https://pynecone.io
+License: Apache-2.0
+Keywords: web,framework
+Author: Nikhil Rao
+Author-email: nikhil@pynecone.io
+Requires-Python: >=3.7,<4.0
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: fastapi (>=0.88.0,<0.89.0)
+Requires-Dist: gunicorn (>=20.1.0,<21.0.0)
+Requires-Dist: httpx (>=0.23.1,<0.24.0)
+Requires-Dist: plotly (>=5.10.0,<6.0.0)
+Requires-Dist: pydantic (==1.10.2)
+Requires-Dist: redis (>=4.3.5,<5.0.0)
+Requires-Dist: rich (>=12.6.0,<13.0.0)
+Requires-Dist: sqlmodel (>=0.0.8,<0.0.9)
+Requires-Dist: typer (==0.4.2)
+Requires-Dist: uvicorn (>=0.20.0,<0.21.0)
+Requires-Dist: websockets (>=10.4,<11.0)
+Project-URL: Documentation, https://pynecone.io/docs/getting-started/introduction
+Project-URL: Repository, https://github.com/pynecone-io/pynecone
+Description-Content-Type: text/markdown
+
+<div align="center">
+
+<h1 align="center">
+  <img width="600" src="docs/images/logo.svg#gh-light-mode-only" alt="Pynecone Logo">
+  <img width="600" src="docs/images/logo_white.svg#gh-dark-mode-only" alt="Pynecone Logo">
+</h1>
+
+**Build performant, customizable web apps in pure Python.**
+
+[![PyPI version](https://badge.fury.io/py/pynecone-io.svg)](https://badge.fury.io/py/pynecone-io)
+![tests](https://github.com/pynecone-io/pynecone/actions/workflows/build.yml/badge.svg)
+![versions](https://img.shields.io/pypi/pyversions/pynecone-io.svg)
+[![License](https://img.shields.io/badge/License-Apache_2.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)  
+
+<div align="left">
+
+## Getting Started
+
+Pynecone is a full-stack Python framework that makes it easy to build and deploy web apps in minutes. All the information for getting started can be found in this README. However, a more detailed explanation of the following topics can be found on our website:
+
+<div align="center">
+
+### [Docs](https://pynecone.io/docs/getting-started/introduction) | [Component Library](https://pynecone.io/docs/library) | [Gallery](https://pynecone.io/docs/gallery) | [Deployment](https://pynecone.io/docs/hosting/deploy) 
+
+<div align="left">
+
+## Installation
+  
+Pynecone requires the following to get started:
+
+* Python 3.7+
+* [Node.js 12.22.0+](https://nodejs.org/en/) (Don't worry, you'll never have to write any Javascript)
+
+```
+$ pip install pynecone-io
+```
+
+*NOTE:* Make sure you install the correct package: `pynecone-io`, not `pynecone`.
+
+## Create your first Pynecone App
+
+Installing Pynecone also installs the `pc` command line tool. Test that the install was successful by creating a new project. 
+
+Replace my_app_name with your project name:
+
+```
+$ mkdir my_app_name
+$ cd my_app_name
+$ pc init
+```
+
+When you run this command for the first time, we will download and install `bun` automatically.
+
+This command initializes a template app in your new directory.
+You can run this app in development mode:
+```
+$ pc run
+```
+
+You should see your app running at http://localhost:3000. (Note that the port may be different if you have another app running on port 3000, please notice the terminal output)
+
+
+Now you can modify the source code in `my_app_name/my_app_name.py`. Pynecone has fast refreshes so you can see your changes instantly when you save your code.
+
+
+## Example Pynecone App
+
+Let's go over an example of creating a UI around Dalle. For simplicity of the example below, we call the OpenAI Dalle API, but you could replace this with any ML model locally.
+
+<div align="center">
+<img src="docs/images/dalle.gif" alt="drawing" width="550" style="border-radius:2%"/>
+<div align="left">
+
+Here is the complete code to create this. This is all done in one Python file!
+
+```python
+import pynecone as pc
+import openai
+
+openai.api_key = "YOUR_API_KEY"
+
+class State(pc.State):
+    """The app state."""
+    prompt = ""
+    image_url = ""
+    image_processing = False
+    image_made = False
+
+    def process_image(self):
+        """Set the image processing flag to true and indicate image is not made yet."""
+        self.image_processing = True
+        self.image_made = False        
+
+    def get_image(self):
+        """Get the image from the prompt."""
+        response = openai.Image.create(prompt=self.prompt, n=1, size="1024x1024")
+        self.image_url = response["data"][0]["url"]
+        self.image_processing = False
+        self.image_made = True
+
+def index():
+    return pc.center(
+        pc.vstack(
+            pc.heading("DALL-E", font_size="1.5em"),
+            pc.input(placeholder="Enter a prompt..", on_blur=State.set_prompt),
+            pc.button(
+                "Generate Image",
+                on_click=[State.process_image, State.get_image],
+                width="100%",
+            ),
+            pc.divider(),
+            pc.cond(
+                State.image_processing,
+                pc.circular_progress(is_indeterminate=True),
+                pc.cond(
+                     State.image_made,
+                     pc.image(
+                         src=State.image_url,
+                         height="25em",
+                         width="25em",
+                    )
+                )
+            ),
+            bg="white",
+            padding="2em",
+            shadow="lg",
+            border_radius="lg",
+        ),
+        width="100%",
+        height="100vh",
+        bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,0%,100%,0) 19%)",
+    )
+
+# Add state and page to the app.
+app = pc.App(state=State)
+app.add_page(index, title="Pynecone:DALL-E")
+app.compile()
+```
+Let's break this down.
+
+### **UI In Pynecone**
+
+Lets start by talking about the UI this Pynecone App.
+
+```python 
+def index():
+    return pc.center(
+        ...
+    )
+```
+This index function defines the frontend of the app. We use different components such as `center`, `vstack`, `input`, and `button` to build the front end. Components can be nested to create complex layouts and styled using CSS's full power. Just pass them in as keyword args.
+
+Pynecone comes with [50+ built-in components](https://pynecone.io/docs/library) to help you get started. We are actively adding more components, plus it's easy to create your own components.
+
+### **State**
+
+``` python
+class State(pc.State):
+    """The app state."""
+    prompt = ""
+    image_url = ""
+    image_processing = False
+    image_made = False
+```
+The state defines all the variables (called vars) in an app that can change and the functions that change them.
+Here the state is comprised of a `prompt` and `image_url`. There are also the booleans `image_processing` and `image_made` to indicate when to show the circular progress and image.
+
+### **Event Handlers**
+
+```python
+    def process_image(self):
+        """Set the image processing flag to true and indicate image is not made yet."""
+        self.image_processing = True
+        self.image_made = False        
+
+    def get_image(self):
+        """Get the image from the prompt."""
+        response = openai.Image.create(prompt=self.prompt, n=1, size="1024x1024")
+        self.image_url = response["data"][0]["url"]
+        self.image_processing = False
+        self.image_made = True
+```
+Within the state, we define functions called event handlers that change the state vars. Event handlers are the way that we can modify the state in Pynecone. They can be called in response to user actions, such as clicking a button or typing in a text box. These actions are called events.
+
+Our dalle app has two event handlers, `process_image` to indicate that the image is being generated and `get_image`, which calls the OpenAI API.
+
+### **Routing** 
+
+Finally we define our app and tell it what state to use.
+```python
+app = pc.App(state=State)
+```
+We add a route from the root of the app to the index component. We also add a title that will show up in the page preview/ browser tab.
+```python
+app.add_page(index, title="Pynecone:DALL-E")
+app.compile()
+```
+You can create a multi-page app by adding more routes.
+
+## Status
+
+As of December 2022, Pynecone has just been released publicly and is in the **Alpha Stage**.
+
+ - :large_orange_diamond: **Public Alpha**: Anyone can install and use Pynecone. There may be issues, but we are working to resolve them activly.
+ - **Public Beta**: Stable enough for non-enterprise use-cases.
+ - **Public Hosting Beta**: **Optionally** Deploy and Host your own apps on Pynecone!
+ - **Public**: Pynecone is production ready.
+
+Pynecone has new releases and features coming every week! Make sure to: :star: star and :eyes: watch this repository to stay up to date.
+ 
+## Contributing
+
+We welcome contributions of any size! Below are some good ways to get started in the Pynecone community.
+
+- **GitHub Discussions**: A great way to talk about features you want added or things that are confusing/need clarification.
+- **GitHub Issues**: These are an excellent way to report bugs. Additionally, you can try and solve an existing issue and submit a PR.
+
+Want to join our Pynecone team or learn more about our framework? Send us an email [here](mailto:founders@pynecone.io), and we can schedule a call to discuss Pynecone and how you can start contributing.
+
+We are actively looking for contributors, no matter your skill level or experience.
+
+## More Information 
+
+More information about Pynecone can be found on our website:
+- [pynecone.io](https://pynecone.io)
+  
+Join Our Discord:
+- [Discord Link](https://discord.gg/T5WSbC2YtQ)
+
+## License
+
+Pynecone is open-source and licensed under the [Apache License 2.0](LICENSE).
+
+## Contributors
+
+<a href="https://github.com/picklelo"><img src="https://avatars.githubusercontent.com/u/6270214?v=4" width="50" height="50" alt=""/></a> 
+<a href="https://github.com/Alek99"><img src="https://avatars.githubusercontent.com/u/38776361?s=400&u=bd6c163fe787c2de1a26c881598e54b67e2482dd&v=4" width="50" height="50" alt=""/></a> 
+<a href="https://github.com/kbrgl"><img src="https://avatars.githubusercontent.com/u/13417496?v=4" width="50" height="50" alt=""/></a> 
+<a href="https://github.com/Lendemor"><img src="https://avatars.githubusercontent.com/u/4015177?v=4" width="50" height="50" alt=""/></a> 
+<a href="https://github.com/FHU-yezi"><img src="https://avatars.githubusercontent.com/u/50828953?v=4" width="50" height="50" alt=""/></a> 
+
