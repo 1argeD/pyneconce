@@ -6,13 +6,10 @@ class State(pc.State):
     pass
 
 
-# ②
-def hello():
-    return pc.text("Hello, World")
-
-
 def index():
-    return hello()
+    return pc.hstack(
+        pc.button('줄이기'), pc.text("0"), pc.button('늘리기')
+    )
 
 
 # ③
