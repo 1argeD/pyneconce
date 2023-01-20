@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react"
 import {useRouter} from "next/router"
 import {E, connect, updateState} from "/utils/state"
 import "focus-visible/dist/focus-visible"
-import {Box, Center, Code, Heading, VStack} from "@chakra-ui/react"
+import {Text} from "@chakra-ui/react"
 import NextHead from "next/head"
 
 const EVENT = "ws://localhost:8000/event"
@@ -39,20 +39,13 @@ useEffect(() => {
   update()
 })
 return (
-<Center sx={{"paddingTop": "10%"}}>
-<VStack spacing="1.5em"
-sx={{"fontSize": "2em"}}>
-<Heading sx={{"fontSize": "2em"}}>
-{`Welcome to Pynecone!`}</Heading>
-<Box>
-{`Get started by editing `}
-<Code sx={{"fontSize": "1em"}}>
-{`pyneconceTEST/pyneconceTEST.py`}</Code></Box></VStack>
+<Text>
+{`Hello World`}
 <NextHead>
 <title>{`Pynecone App`}</title>
-<meta name="description"
-content="A Pynecone app."/>
+<meta content="A Pynecone app."
+name="description"/>
 <meta property="og:image"
-content="favicon.ico"/></NextHead></Center>
+content="favicon.ico"/></NextHead></Text>
 )
 }
