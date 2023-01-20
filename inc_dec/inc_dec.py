@@ -7,8 +7,12 @@ class State(pc.State):
 
 
 # ②
+def hello():
+    return pc.text("Hello, World")
+
+
 def index():
-    return pc.text("Hello World")
+    return hello()
 
 
 # ③

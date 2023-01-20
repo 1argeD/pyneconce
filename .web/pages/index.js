@@ -40,11 +40,11 @@ useEffect(() => {
 })
 return (
 <Text>
-{`Hello World`}
+{`Hello, World`}
 <NextHead>
 <title>{`Pynecone App`}</title>
-<meta content="A Pynecone app."
-name="description"/>
+<meta name="description"
+content="A Pynecone app."/>
 <meta property="og:image"
 content="favicon.ico"/></NextHead></Text>
 )
