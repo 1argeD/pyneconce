@@ -23,8 +23,17 @@ def index():
 
 
 def todo():
-    return pc.hstack(
-        pc.text("todo page")
+    return pc.container(
+        pc.vstack(
+            pc.heading("제 목"),
+            pc.input(),
+            pc.button("추 가"),
+            pc.ordered_list(
+                pc.list_item(pc.hstack(pc.button(), pc.text("아침먹고 땡"))),
+                pc.list_item(pc.hstack(pc.button(), pc.text("점심먹고 땡"))),
+                pc.list_item(pc.hstack(pc.button(), pc.text("저녁먹고 땡"))),
+            ),
+        ),
     )
 
 
