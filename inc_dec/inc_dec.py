@@ -13,15 +13,22 @@ class State(pc.State):
 
 def index():
     return pc.hstack(
-        pc.button("감소", on_click=State.decrement,
+        pc.button("줄이기", on_click=State.decrement,
                   color_scheme="red", border_radius="2em"),
         pc.text(State.count),
-        pc.button("증가", on_click=State.increment,
+        pc.button("늘리기", on_click=State.increment,
                   color_scheme="green", border_radius="2em"),
         padding="50px"
     )
 
 
+def todo():
+    return pc.hstack(
+        pc.text("todo page")
+    )
+
+
 app = pc.App(state=State)
 app.add_page(index)
+app.add_page(todo, path="todo")
 app.compile()

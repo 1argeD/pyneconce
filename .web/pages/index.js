@@ -106,9 +106,9 @@ sx={{"borderRadius": "2em"}}>
 
 <title>{`Pynecone App`}</title>
 
-<meta name="description"
+<meta content="A Pynecone app."
 
-content="A Pynecone app."/>
+name="description"/>
 
 <meta content="favicon.ico"
 
