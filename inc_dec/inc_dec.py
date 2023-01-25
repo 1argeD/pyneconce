@@ -13,9 +13,12 @@ class State(pc.State):
 
 def index():
     return pc.hstack(
-        pc.button("감소", on_click=State.decrement),
+        pc.button("감소", on_click=State.decrement,
+                  color_scheme="red", border_radius="2em"),
         pc.text(State.count),
-        pc.button("증가", on_click=State.increment),
+        pc.button("증가", on_click=State.increment,
+                  color_scheme="green", border_radius="2em"),
+        padding="50px"
     )
 
 

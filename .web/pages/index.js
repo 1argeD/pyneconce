@@ -80,19 +80,27 @@ useEffect(() => {
 
 return (
 
-<HStack>
+<HStack sx={{"padding": "50px"}}>
 
-<Button onClick={() => Event([E("state.decrement", {})])}>
+<Button colorScheme="red"
 
-{`감소`}</Button>
+onClick={() => Event([E("state.decrement", {})])}
+
+sx={{"borderRadius": "2em"}}>
+
+{`줄이기`}</Button>
 
 <Text>
 
 {state.count}</Text>
 
-<Button onClick={() => Event([E("state.increment", {})])}>
+<Button colorScheme="green"
 
-{`증가`}</Button>
+onClick={() => Event([E("state.increment", {})])}
+
+sx={{"borderRadius": "2em"}}>
+
+{`늘리기`}</Button>
 
 <NextHead>
 
@@ -102,9 +110,9 @@ return (
 
 content="A Pynecone app."/>
 
-<meta property="og:image"
+<meta content="favicon.ico"
 
-content="favicon.ico"/></NextHead></HStack>
+property="og:image"/></NextHead></HStack>
 
 )
 
