@@ -1,18 +1,24 @@
 import pynecone as pc
 
 
-# ①
 class State(pc.State):
-    pass
+    count = 0
+
+    def increment(self):
+        self.count += 1
+
+    def decrement(self):
+        self.count -= 1
 
 
 def index():
     return pc.hstack(
-        pc.button('줄이기'), pc.text("0"), pc.button('늘리기')
+        pc.button("감소", on_click=State.decrement),
+        pc.text(State.count),
+        pc.button("증가", on_click=State.increment),
     )
 
 
-# ③
 app = pc.App(state=State)
 app.add_page(index)
 app.compile()

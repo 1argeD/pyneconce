@@ -16,7 +16,7 @@ const EVENT = "ws://localhost:8000/event"
 
 export default function Component() {
 
-const [state, setState] = useState({"events": [{"name": "state.hydrate"}]})
+const [state, setState] = useState({"count": 0, "events": [{"name": "state.hydrate"}]})
 
 const [result, setResult] = useState({"state": null, "events": [], "processing": false})
 
@@ -82,17 +82,17 @@ return (
 
 <HStack>
 
-<Button>
+<Button onClick={() => Event([E("state.decrement", {})])}>
 
-{`줄이기`}</Button>
+{`감소`}</Button>
 
 <Text>
 
-{`0`}</Text>
+{state.count}</Text>
 
-<Button>
+<Button onClick={() => Event([E("state.increment", {})])}>
 
-{`늘리기`}</Button>
+{`증가`}</Button>
 
 <NextHead>
 
