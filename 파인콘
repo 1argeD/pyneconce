@@ -66,5 +66,5 @@ pc init를 초기화 할 경우 favicon.ico가 복사 된다.
   )
   
   등 환경을 설정할 수 있다. 
-  단 bun 은 아직 windowOS에서는 지원하지 않으며, wsl에서는 설치 및 실해잉 가능하다.
+  단 bun 은 아직 windowOS에서는 지원하지 않으며, wsl에서는 설치 및 실행 가능하다.
 
