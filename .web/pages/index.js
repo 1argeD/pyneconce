@@ -2,12 +2,12 @@ import {useEffect, useRef, useState} from "react"
 import {useRouter} from "next/router"
 import {E, connect, updateState} from "/utils/state"
 import "focus-visible/dist/focus-visible"
-import {Button, Container, HStack, Heading, Input, ListItem, OrderedList, Text, VStack} from "@chakra-ui/react"
+import {Button, HStack, Text} from "@chakra-ui/react"
 import NextHead from "next/head"
 
 const EVENT = "ws://localhost:8000/event"
 export default function Component() {
-const [state, setState] = useState({"items": ["DDang", "asdf", "adssg"], "new_item": "", "events": [{"name": "state.hydrate"}]})
+const [state, setState] = useState({"count": 0, "items": ["DDang", "asdf", "adssg"], "new_item": "", "events": [{"name": "state.hydrate"}]})
 const [result, setResult] = useState({"state": null, "events": [], "processing": false})
 const router = useRouter()
 const socket = useRef(null)
@@ -39,25 +39,22 @@ useEffect(() => {
   update()
 })
 return (
-<Container>
-<VStack>
-<Heading>
-{`Title`}</Heading>
-<Input type="text"
-onBlur={(_e) => Event([E("state.set_new_item", {value:_e.target.value})])}/>
-<Button onClick={() => Event([E("state.add_item", {})])}>
-{`Add`}</Button>
-<OrderedList>
-{state.items.map((ozexorgv, i) => <ListItem key={i}>
-<HStack>
-<Button onClick={() => Event([E("state.finsh_item", {item:ozexorgv})])}/>
+<HStack sx={{"padding": "50px"}}>
+<Button colorScheme="red"
+onClick={() => Event([E("state.decrement", {})])}
+sx={{"borderRadius": "2em"}}>
+{`minus`}</Button>
 <Text>
-{ozexorgv}</Text></HStack></ListItem>)}</OrderedList></VStack>
+{state.count}</Text>
+<Button colorScheme="green"
+onClick={() => Event([E("state.increment", {})])}
+sx={{"borderRadius": "2em"}}>
+{`plus`}</Button>
 <NextHead>
 <title>{`Pynecone App`}</title>
 <meta content="A Pynecone app."
 name="description"/>
 <meta property="og:image"
-content="favicon.ico"/></NextHead></Container>
+content="favicon.ico"/></NextHead></HStack>
 )
 }

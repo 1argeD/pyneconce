@@ -7,26 +7,26 @@ import NextHead from "next/head"
 
 const EVENT = "ws://localhost:8000/event"
 export default function Component() {
-const [calculator, setCalculator] = useState({"count": 0, "events": [{"name": "calculator.hydrate"}]})
+const [base_state, setBase_state] = useState({"state": {"items": ["DDang", "asdf", "adssg"], "new_item": ""}, "events": [{"name": "base_state.hydrate"}]})
 const [result, setResult] = useState({"state": null, "events": [], "processing": false})
 const router = useRouter()
 const socket = useRef(null)
 const { isReady } = router;
-const Event = events => setCalculator({
-  ...calculator,
-  events: [...calculator.events, ...events],
+const Event = events => setBase_state({
+  ...base_state,
+  events: [...base_state.events, ...events],
 })
 useEffect(() => {
   if(!isReady)
     return;
   if (!socket.current) {
-    connect(socket, calculator, result, setResult, router, EVENT)
+    connect(socket, base_state, result, setResult, router, EVENT)
   }
   const update = async () => {
     if (result.state != null) {
-      setCalculator({
+      setBase_state({
         ...result.state,
-        events: [...calculator.events, ...result.events],
+        events: [...base_state.events, ...result.events],
       })
       setResult({
         state: null,
@@ -34,26 +34,26 @@ useEffect(() => {
         processing: false,
       })
     }
-    await updateState(calculator, result, setResult, router, socket.current)
+    await updateState(base_state, result, setResult, router, socket.current)
   }
   update()
 })
 return (
 <HStack sx={{"padding": "50px"}}>
 <Button colorScheme="red"
-onClick={() => Event([E("calculator.decrement", {})])}
+onClick={() => Event([E("base_state.state.decrement", {})])}
 sx={{"borderRadius": "2em"}}>
 {`minus`}</Button>
 <Text>
-{calculator.count}</Text>
+{base_state.state.count}</Text>
 <Button colorScheme="green"
-onClick={() => Event([E("calculator.increment", {})])}
+onClick={() => Event([E("base_state.state.increment", {})])}
 sx={{"borderRadius": "2em"}}>
 {`plus`}</Button>
 <NextHead>
 <title>{`Pynecone App`}</title>
-<meta content="A Pynecone app."
-name="description"/>
+<meta name="description"
+content="A Pynecone app."/>
 <meta content="favicon.ico"
 property="og:image"/></NextHead></HStack>
 )

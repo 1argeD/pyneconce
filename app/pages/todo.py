@@ -1,7 +1,9 @@
 import pynecone as pc
 
+from app.state import BaseState
 
-class State(pc.State):
+
+class State(BaseState):
     items = [
         "DDang",
         "asdf",
@@ -34,8 +36,3 @@ def todo():
             ),
         ),
     )
-
-
-app = pc.App(state=State)
-app.add_page(todo, path="/todo")
-app.compile()
